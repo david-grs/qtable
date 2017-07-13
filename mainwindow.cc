@@ -9,7 +9,7 @@ MainWindow::MainWindow()
     progress = 0;
 
     QFile file;
-    file.setFileName(":/jquery.js");
+    file.setFileName("qrc:/thirdparty/jquery.js");
     file.open(QIODevice::ReadOnly);
     jQuery = file.readAll();
     jQuery.append("\nvar qt = { 'jQuery': jQuery.noConflict(true) };");
@@ -18,7 +18,7 @@ MainWindow::MainWindow()
     QNetworkProxyFactory::setUseSystemConfiguration(true);
 
     view = new QWebView(this);
-    view->load(QUrl("qrc:/index.html"));
+    view->setUrl(QUrl("qrc:/index.html"));
     connect(view, SIGNAL(loadFinished(bool)), SLOT(adjustLocation()));
     connect(view, SIGNAL(titleChanged(QString)), SLOT(adjustTitle()));
     connect(view, SIGNAL(loadProgress(int)), SLOT(setProgress(int)));
@@ -104,8 +104,9 @@ void MainWindow::setProgress(int p)
     adjustTitle();
 }
 
-void MainWindow::finishLoading(bool)
+void MainWindow::finishLoading(bool ok)
 {
+    qDebug() << "OK=" << ok;
     progress = 100;
     adjustTitle();
     view->page()->mainFrame()->evaluateJavaScript(jQuery);
