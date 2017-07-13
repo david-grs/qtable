@@ -7,6 +7,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(Qt5Widgets REQUIRED)
-add_executable(qtable main.cc mainwindow.cc resources.qrc)
+qt5_add_resources(UI_RESOURCES resources.qrc)
+add_executable(qtable main.cc mainwindow.cc ${UI_RESOURCES})
 
 qt5_use_modules(qtable Widgets Network WebKitWidgets)
