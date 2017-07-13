@@ -41,7 +41,7 @@ there's a rowspan on the first cell. Case added to the tests. issue#432 */
 }
 
 .pure-table thead {
-    background-color: #e0e0e0;
+    background-color: #E7BB95;
     color: #000;
     text-align: left;
     vertical-align: bottom;
