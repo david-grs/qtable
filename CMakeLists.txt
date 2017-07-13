@@ -5,6 +5,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(Qt5Widgets REQUIRED)
-add_executable(qtable main.cc)
+add_executable(qtable main.cc mainwindow.cc)
 
-qt5_use_modules(qtable Widgets)
+qt5_use_modules(qtable Widgets Network WebKitWidgets)
