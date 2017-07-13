@@ -3,7 +3,7 @@
     border-collapse: collapse;
     border-spacing: 0;
     empty-cells: show;
-    border: 1px solid #cbcbcb;
+    border: 0px solid #cbcbcb;
 }
 
 .pure-table caption {
@@ -16,11 +16,11 @@
 .pure-table td,
 .pure-table th {
     border-left: 1px solid #cbcbcb;/*  inner column border */
-    border-width: 0 0 0 1px;
+    border-width: 0 0 0 0px;
     font-size: inherit;
     margin: 0;
     overflow: visible; /*to make ths where the title is really long work*/
-    padding: 0.5em 1em; /* cell padding */
+    padding: 0em 0.5em;
 }
 
 /* Consider removing this next declaration block, as it causes problems when
@@ -37,39 +37,11 @@ there's a rowspan on the first cell. Case added to the tests. issue#432 */
     vertical-align: bottom;
 }
 
-/*
-striping:
-   even - #fff (white)
-   odd  - #f2f2f2 (light gray)
-*/
 .pure-table td {
-    background-color: transparent;
+    background-color: #E7CFCD;
+    /* border-bottom: 1px solid #000000; */
 }
 .pure-table-odd td {
-    background-color: #f2f2f2;
+    background-color: #B7D8E8;
 }
 
-/* nth-child selector for modern browsers */
-.pure-table-striped tr:nth-child(2n-1) td {
-    background-color: #f2f2f2;
-}
-
-/* BORDERED TABLES */
-.pure-table-bordered td {
-    border-bottom: 1px solid #cbcbcb;
-}
-.pure-table-bordered tbody > tr:last-child > td {
-    border-bottom-width: 0;
-}
-
-
-/* HORIZONTAL BORDERED TABLES */
-
-.pure-table-horizontal td,
-.pure-table-horizontal th {
-    border-width: 0 0 1px 0;
-    border-bottom: 1px solid #cbcbcb;
-}
-.pure-table-horizontal tbody > tr:last-child > td {
-    border-bottom-width: 0;
-}
