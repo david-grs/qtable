@@ -18,7 +18,7 @@ MainWindow::MainWindow()
     QNetworkProxyFactory::setUseSystemConfiguration(true);
 
     view = new QWebView(this);
-    view->load(":/index.html");
+    view->load(QUrl("qrc:/index.html"));
     connect(view, SIGNAL(loadFinished(bool)), SLOT(adjustLocation()));
     connect(view, SIGNAL(titleChanged(QString)), SLOT(adjustTitle()));
     connect(view, SIGNAL(loadProgress(int)), SLOT(setProgress(int)));
