@@ -9,7 +9,7 @@ MainWindow::MainWindow()
     progress = 0;
 
     QFile file;
-    file.setFileName("qrc:/thirdparty/jquery.js");
+    file.setFileName(":/jquery.js");
     file.open(QIODevice::ReadOnly);
     jQuery = file.readAll();
     jQuery.append("\nvar qt = { 'jQuery': jQuery.noConflict(true) };");
