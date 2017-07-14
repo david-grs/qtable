@@ -7,33 +7,33 @@ class QLineEdit;
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit MainWindow();
+	explicit MainWindow();
 
 protected slots:
 
-    void adjustLocation();
-    void changeLocation();
-    void adjustTitle();
-    void setProgress(int p);
-    void finishLoading(bool);
+	void adjustLocation();
+	void changeLocation();
+	void adjustTitle();
+	void setProgress(int p);
+	void finishLoading(bool);
 
-    void viewSource();
-    void slotSourceDownloaded();
+	void viewSource();
+	void slotSourceDownloaded();
 
-    void highlightAllLinks();
-    void rotateImages(bool invert);
-    void removeGifImages();
-    void removeInlineFrames();
-    void removeObjectElements();
-    void removeEmbeddedElements();
+	void highlightAllLinks();
+	void rotateImages(bool invert);
+	void removeGifImages();
+	void removeInlineFrames();
+	void removeObjectElements();
+	void removeEmbeddedElements();
 
 private:
-    QString jQuery;
-    QWebView *view;
-    QLineEdit *locationEdit;
-    QAction *rotateAction;
-    int progress;
+	QString jQuery;
+	QWebView *view;
+	QLineEdit *locationEdit;
+	QAction *rotateAction;
+	int progress;
 };
