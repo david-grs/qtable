@@ -64,6 +64,9 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 
 void MainWindow::finishLoading(bool ok)
 {
+	if (!ok)
+		throw std::runtime_error("cannot load page from resource"); // TODO
+
 	QSize tableSize = view->page()->mainFrame()->findFirstElement("table").geometry().size();
 	resize(tableSize);
 
