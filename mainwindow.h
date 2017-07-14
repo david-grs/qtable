@@ -31,11 +31,11 @@ private:
 protected:
 	void closeEvent(QCloseEvent *event) { emit closed(); }
 
-	QString jQuery;
+	QString mJQuery;
 	QPoint mPosition;
 
 //#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
-	QWebView *view;
+	QWebView *mWebView;
 //#else
 //	QWebEngineView* view;
 //#endif

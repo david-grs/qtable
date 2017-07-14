@@ -5,34 +5,34 @@
 #if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
 #include <QtWebKitWidgets>
 #else
-#include <QWebEngineView>
+#include <QWebEnginemWebView>
 #endif
 
 MainWindow::MainWindow()
 {
 	QFile file;
-	file.setFileName(":/jquery.js");
+	file.setFileName(":/mJQuery.js");
 	file.open(QIODevice::ReadOnly);
-	jQuery = file.readAll();
-	jQuery.append("\nvar qt = { 'jQuery': jQuery.noConflict(true) };");
+	mJQuery = file.readAll();
+	mJQuery.append("\nvar qt = { 'mJQuery': mJQuery.noConflict(true) };");
 	file.close();
 
-	view = new QWebView(this);
+	mWebView = new QWebView(this);
 
-	view->setUrl(QUrl("qrc:/index.html"));
-	connect(view, SIGNAL(loadFinished(bool)), SLOT(finishLoading(bool)));
+	mWebView->setUrl(QUrl("qrc:/index.html"));
+	connect(mWebView, SIGNAL(loadFinished(bool)), SLOT(finishLoading(bool)));
 
 	resize(300, 200);
 	setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-	setCentralWidget(view);
+	setCentralWidget(mWebView);
 
-	view->setContextMenuPolicy(Qt::CustomContextMenu); // disable default context menu (on right click) with Reload
-	view->installEventFilter(this); // forward mouse events from the widget to this object
+	mWebView->setContextMenuPolicy(Qt::CustomContextMenu); // disable default context menu (on right click) with Reload
+	mWebView->installEventFilter(this); // forward mouse events from the widget to this object
 }
 
 void MainWindow::setHtml(const QString& html)
 {
-	view->page()->mainFrame()->setHtml(html);
+	mWebView->page()->mainFrame()->setHtml(html);
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
@@ -80,24 +80,24 @@ void MainWindow::finishLoading(bool ok)
 	if (!ok)
 		throw std::runtime_error("cannot load page from resource"); // TODO
 
-	QWebFrame* frame = view->page()->mainFrame();
+	QWebFrame* frame = mWebView->page()->mainFrame();
 
 	QSize tableSize = frame->findFirstElement("table").geometry().size();
 	resize(tableSize);
 
 	frame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
 	frame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAsNeeded);
-	frame->evaluateJavaScript(jQuery);
+	frame->evaluateJavaScript(mJQuery);
 }
 
 #if 0
 void MainWindow::highlightAllLinks()
 {
-	// We append '; undefined' after the jQuery call here to prevent a possible recursion loop and crash caused by
+	// We append '; undefined' after the mJQuery call here to prevent a possible recursion loop and crash caused by
 	// the way the elements returned by the each iterator elements reference each other, which causes problems upon
 	// converting them to QVariants.
-	QString code = "qt.jQuery('a').each( function () { qt.jQuery(this).css('background-color', 'yellow') } ); undefined";
-	view->page()->mainFrame()->evaluateJavaScript(code);
+	QString code = "qt.mJQuery('a').each( function () { qt.mJQuery(this).css('background-color', 'yellow') } ); undefined";
+	mWebView->page()->mainFrame()->evaluateJavaScript(code);
 }
 #endif
 
