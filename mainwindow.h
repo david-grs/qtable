@@ -4,6 +4,7 @@
 
 class QWebView;
 class QLineEdit;
+class QPoint;
 
 class MainWindow : public QMainWindow
 {
@@ -14,8 +15,13 @@ public:
 
 protected slots:
 	void finishLoading(bool);
+	bool eventFilter(QObject *obj, QEvent *event);
 
 private:
+	void mousePressEvent(QMouseEvent *event);
+	void mouseMoveEvent(QMouseEvent *event);
+
 	QString jQuery;
 	QWebView *view;
+	QPoint mPosition;
 };
