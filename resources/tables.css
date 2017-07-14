@@ -1,57 +1,63 @@
 html *
 {
-    font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
-    font-size: 12px;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: 400;
-    line-height: 18px;
+	font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 400;
+	line-height: 18px;
+}
+
+body
+{
+	margin: 0px;
+	padding: 0px;
 }
 
 .pure-table {
-    /* Remove spacing between table cells (from Normalize.css) */
-    border-collapse: collapse;
-    border-spacing: 0;
-    empty-cells: show;
-    border: 0px solid #cbcbcb;
+	/* Remove spacing between table cells (from Normalize.css) */
+	border-collapse: collapse;
+	border-spacing: 0;
+	empty-cells: show;
+	border: 0px solid #cbcbcb;
 }
 
 .pure-table caption {
-    color: #000;
-    font: italic 85%/1 arial, sans-serif;
-    padding: 1em 0;
-    text-align: center;
+	color: #000;
+	font: italic 85%/1 arial, sans-serif;
+	padding: 1em 0;
+	text-align: center;
 }
 
 .pure-table td,
 .pure-table th {
-    border-left: 1px solid #cbcbcb;/*  inner column border */
-    border-width: 0 0 0 0px;
-    font-size: inherit;
-    margin: 0;
-    overflow: visible; /*to make ths where the title is really long work*/
-    padding: 0em 0.5em;
+	border-left: 1px solid #cbcbcb;/*  inner column border */
+	border-width: 0 0 0 0px;
+	font-size: inherit;
+	margin: 0;
+	overflow: visible; /*to make ths where the title is really long work*/
+	padding: 0em 0.5em;
 }
 
 /* Consider removing this next declaration block, as it causes problems when
 there's a rowspan on the first cell. Case added to the tests. issue#432 */
 .pure-table td:first-child,
 .pure-table th:first-child {
-    border-left-width: 0;
+	border-left-width: 0;
 }
 
 .pure-table thead {
-    background-color: #E7BB95;
-    color: #000;
-    text-align: left;
-    vertical-align: bottom;
+	background-color: #E7BB95;
+	color: #000;
+	text-align: left;
+	vertical-align: bottom;
 }
 
 .pure-table td {
-    background-color: #E7CFCD;
-    /* border-bottom: 1px solid #000000; */
+	background-color: #E7CFCD;
+	/* border-bottom: 1px solid #000000; */
 }
 .pure-table-odd td {
-    background-color: #B7D8E8;
+	background-color: #B7D8E8;
 }
 
