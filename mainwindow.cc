@@ -26,7 +26,8 @@ MainWindow::MainWindow()
 	setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 	setCentralWidget(view);
 
-	view->installEventFilter(this);
+	view->setContextMenuPolicy(Qt::CustomContextMenu); // disable default context menu (on right click) with Reload
+	view->installEventFilter(this); // forward mouse events from the widget to this object
 }
 
 void MainWindow::setHtml(const QString& html)
