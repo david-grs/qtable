@@ -11,10 +11,13 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 find_package(Qt5Widgets REQUIRED)
 qt5_add_resources(UI_RESOURCES resources.qrc)
-add_executable(qtable main.cc mainwindow.cc ${UI_RESOURCES})
+add_executable(qtable main.cc mainwindow.cc udp_server.h ${UI_RESOURCES})
 target_link_libraries(qtable ${Boost_LIBRARIES})
 target_link_libraries(qtable pthread) #Boost_USE_MULTITHREADED does not work on all linux distributions
 
 qt5_use_modules(qtable Widgets WebKitWidgets)
 # >5.6 qt5_use_modules(qtable Widgets WebEngineWidgets)
 # specific kit: -DCMAKE_PREFIX_PATH=~/Qt5.6.2/5.6/gcc_64/lib/cmake/
+
+add_executable(client client.cc udp_client.h)
+target_link_libraries(client ${Boost_LIBRARIES} pthread)
