@@ -14,6 +14,9 @@ class MainWindow : public QMainWindow
 public:
 	explicit MainWindow();
 
+signals:
+	void closed();
+
 public slots:
 	void setHtml(const QString& html);
 
@@ -24,6 +27,9 @@ protected slots:
 private:
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
+
+protected:
+	void closeEvent(QCloseEvent *event) { emit closed(); }
 
 	QString jQuery;
 	QPoint mPosition;
