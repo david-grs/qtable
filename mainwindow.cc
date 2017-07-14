@@ -19,8 +19,9 @@ MainWindow::MainWindow()
 	view->setUrl(QUrl("qrc:/index.html"));
 	connect(view, SIGNAL(loadFinished(bool)), SLOT(finishLoading(bool)));
 
+	resize(300, 200);
+	setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 	setCentralWidget(view);
-	setUnifiedTitleAndToolBarOnMac(true);
 }
 
 void MainWindow::finishLoading(bool ok)
