@@ -49,6 +49,10 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 		mouseMoveEvent(mouseEvent);
 		return true;
 	}
+	else if (event->type() == QEvent::MouseButtonDblClick)
+	{
+		return true;
+	}
 	else
 	{
 		return QObject::eventFilter(obj, event);
