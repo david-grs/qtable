@@ -3,6 +3,7 @@
 #include <QtWidgets>
 
 class QWebView;
+class QWebEngineView;
 class QLineEdit;
 class QPoint;
 
@@ -13,6 +14,9 @@ class MainWindow : public QMainWindow
 public:
 	explicit MainWindow();
 
+public slots:
+	void setHtml(const QString& html);
+
 protected slots:
 	void finishLoading(bool);
 	bool eventFilter(QObject *obj, QEvent *event);
@@ -22,6 +26,11 @@ private:
 	void mouseMoveEvent(QMouseEvent *event);
 
 	QString jQuery;
-	QWebView *view;
 	QPoint mPosition;
+
+//#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
+	QWebView *view;
+//#else
+//	QWebEngineView* view;
+//#endif
 };

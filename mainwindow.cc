@@ -1,8 +1,12 @@
 #include "mainwindow.h"
 
 #include <QtWidgets>
-#include <QtNetwork>
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
 #include <QtWebKitWidgets>
+#else
+#include <QWebEngineView>
+#endif
 
 MainWindow::MainWindow()
 {
@@ -13,9 +17,8 @@ MainWindow::MainWindow()
 	jQuery.append("\nvar qt = { 'jQuery': jQuery.noConflict(true) };");
 	file.close();
 
-	QNetworkProxyFactory::setUseSystemConfiguration(true);
-
 	view = new QWebView(this);
+
 	view->setUrl(QUrl("qrc:/index.html"));
 	connect(view, SIGNAL(loadFinished(bool)), SLOT(finishLoading(bool)));
 
@@ -24,6 +27,11 @@ MainWindow::MainWindow()
 	setCentralWidget(view);
 
 	view->installEventFilter(this);
+}
+
+void MainWindow::setHtml(const QString& html)
+{
+	view->page()->mainFrame()->setHtml(html);
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
@@ -67,12 +75,14 @@ void MainWindow::finishLoading(bool ok)
 	if (!ok)
 		throw std::runtime_error("cannot load page from resource"); // TODO
 
-	QSize tableSize = view->page()->mainFrame()->findFirstElement("table").geometry().size();
+	QWebFrame* frame = view->page()->mainFrame();
+
+	QSize tableSize = frame->findFirstElement("table").geometry().size();
 	resize(tableSize);
 
-	view->page()->mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
-	view->page()->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAsNeeded);
-	view->page()->mainFrame()->evaluateJavaScript(jQuery);
+	frame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
+	frame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAsNeeded);
+	frame->evaluateJavaScript(jQuery);
 }
 
 #if 0
