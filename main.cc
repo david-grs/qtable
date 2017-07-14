@@ -2,6 +2,8 @@
 
 #include <QApplication>
 
+#include <boost/asio.hpp>
+
 int main( int argc, char **argv )
 {
 	QApplication app(argc, argv);
@@ -9,6 +11,9 @@ int main( int argc, char **argv )
 
 	MainWindow window;
 	window.show();
+
+	boost::asio::io_service io_service;
+
 
 	return app.exec();
 }
