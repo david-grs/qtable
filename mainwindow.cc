@@ -64,7 +64,11 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 
 void MainWindow::finishLoading(bool ok)
 {
-	qDebug() << "OK=" << ok;
+	QSize tableSize = view->page()->mainFrame()->findFirstElement("table").geometry().size();
+	resize(tableSize);
+
+	view->page()->mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
+	view->page()->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAsNeeded);
 	view->page()->mainFrame()->evaluateJavaScript(jQuery);
 }
 
