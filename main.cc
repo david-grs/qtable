@@ -8,20 +8,6 @@
 
 using udp = boost::asio::ip::udp;
 
-void server(boost::asio::io_service& io_service, unsigned short port)
-{
-		udp::socket sock(io_service, udp::endpoint(udp::v4(), port));
-
-		while (1)
-		{
-				char data[MaxLength];
-				udp::endpoint sender_endpoint;
-				size_t length = sock.receive_from(boost::asio::buffer(data, MaxLength), sender_endpoint);
-
-				qDebug() << "receive " << length << " bytes from market";
-		}
-}
-
 class udp_client
 {
 public:
@@ -50,15 +36,11 @@ public:
 			{
 				if(!error)
 				{
-					//std::cout<<"handle_receive_from "<<std::endl;
-					//std::cout<<"recv data(str):"<<show_str(mData.data(), bytes)<<std::endl;
-					//if(bytes > message::header_length)
-					//	mData.body_length(bytes_recvd-message::header_length);
-					//std::cout<<"message.lenght()="<<mData.length()<<"bytes_recvd="<<bytes<<std::endl;
+					qDebug() << "received udp data, bytes=" << bytes;
 				}
 				else
 				{
-					std::cerr<<"error in handle_receive_from:"<<error<<std::endl;
+					qDebug() << "error while receiving udp data, reason=" << error;
 					mSocket.close();
 				}
 			});

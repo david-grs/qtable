@@ -11,7 +11,7 @@
 MainWindow::MainWindow()
 {
 	QFile file;
-	file.setFileName(":/mJQuery.js");
+	file.setFileName(":/jquery.js");
 	file.open(QIODevice::ReadOnly);
 	mJQuery = file.readAll();
 	mJQuery.append("\nvar qt = { 'mJQuery': mJQuery.noConflict(true) };");
