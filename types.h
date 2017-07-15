@@ -13,11 +13,11 @@ struct Instrument
 {
 	Instrument() =default;
 
-	template <typename Arg1, typename Arg2>
-	Instrument(InstrumentId _id, Arg1&& _market, Arg2&& _feedcode)
+	template <typename MarketT, typename FeedcodeT>
+	Instrument(InstrumentId _id, MarketT&& _market, FeedcodeT&& _feedcode)
 	: 	id(_id),
-		market(std::forward<Arg1>(_market)),
-		feedcode(std::forward<Arg2>(_feedcode))
+		market(std::forward<MarketT>(_market)),
+		feedcode(std::forward<FeedcodeT>(_feedcode))
 	{}
 
 	InstrumentId id;
@@ -28,7 +28,7 @@ struct Instrument
 private:
 	friend class boost::serialization::access;
 	template<class Archive>
-	void serialize(Archive & ar, const unsigned int version)
+	void serialize(Archive & ar, const unsigned int /*version*/)
 	{
 		ar & id & market & feedcode;
 	}
@@ -42,7 +42,7 @@ struct DepthEntry
 private:
 	friend class boost::serialization::access;
 	template<class Archive>
-	void serialize(Archive & ar, const unsigned int version)
+	void serialize(Archive & ar, const unsigned int /*version*/)
 	{
 		ar & price & volume;
 	}
@@ -63,7 +63,7 @@ struct BidAsk
 private:
 	friend class boost::serialization::access;
 	template<class Archive>
-	void serialize(Archive & ar, const unsigned int version)
+	void serialize(Archive & ar, const unsigned int /*version*/)
 	{
 		ar & bid & ask;
 	}
