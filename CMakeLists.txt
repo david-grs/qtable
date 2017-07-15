@@ -19,5 +19,5 @@ qt5_use_modules(qtable Widgets WebKitWidgets)
 # >5.6 qt5_use_modules(qtable Widgets WebEngineWidgets)
 # specific kit: -DCMAKE_PREFIX_PATH=~/Qt5.6.2/5.6/gcc_64/lib/cmake/
 
-add_executable(client client.cc udp_client.h)
+add_executable(client client.cc udp_client.h proto.h types.h)
 target_link_libraries(client ${Boost_LIBRARIES} pthread)
