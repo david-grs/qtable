@@ -6,6 +6,8 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+add_definitions("-Wall -Wextra")
+
 find_package(Boost REQUIRED COMPONENTS regex system serialization iostreams)
 include_directories(${Boost_INCLUDE_DIRS})
 
