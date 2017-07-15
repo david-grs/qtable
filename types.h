@@ -9,7 +9,30 @@
 
 using InstrumentId = int;
 
-struct Instrument
+template <typename Obj>
+struct Tracker
+{
+	Tracker() { ++ctor; }
+	~Tracker() { ++dtor; }
+
+	Tracker(const Tracker&) { ++copies; }
+	Tracker& operator=(const Tracker&) { ++copies; }
+
+	Tracker(Tracker&&) { ++moves; }
+	Tracker& operator=(Tracker&&) { ++moves; }
+
+	static std::size_t ctor;
+	static std::size_t dtor;
+	static std::size_t copies;
+	static std::size_t moves;
+};
+
+template <typename Obj> std::size_t Tracker<Obj>::ctor = 0;
+template <typename Obj> std::size_t Tracker<Obj>::dtor = 0;
+template <typename Obj> std::size_t Tracker<Obj>::copies = 0;
+template <typename Obj> std::size_t Tracker<Obj>::moves = 0;
+
+struct Instrument : Tracker<Instrument>
 {
 	Instrument() =default;
 
@@ -18,7 +41,7 @@ struct Instrument
 	: 	id(_id),
 		market(std::forward<MarketT>(_market)),
 		feedcode(std::forward<FeedcodeT>(_feedcode))
-	{}
+	{ }
 
 	InstrumentId id;
 	std::string  market;
