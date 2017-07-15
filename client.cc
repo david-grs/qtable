@@ -113,7 +113,9 @@ std::vector<Instrument> load(const std::string& filename)
 	});
 
 	auto end = std::chrono::steady_clock::now();
-	std::cout << "loaded " << instruments.size() << " instruments after " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << std::endl;
+	std::cout << "loaded " << instruments.size() << " instruments after " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << std::endl;
+
+	return instruments;
 }
 
 void send_instrument_definitions(udp_client& client, const std::vector<Instrument>& instruments)
@@ -134,7 +136,8 @@ int main()
 
 	while (1)
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		std::cout << "send" << std::endl;
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 		send_instrument_definitions(client, instruments);
 	}
 
