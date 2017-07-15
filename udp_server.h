@@ -28,8 +28,8 @@ private:
 				return;
 			}
 
-			if (bytes > 0)
-				std::cout << "received " << bytes <<  " bytes" << std::endl;
+			//if (bytes > 0)
+			//	std::cout << "received " << bytes <<  " bytes" << std::endl;
 
 			async_receive();
 		});
