@@ -69,7 +69,9 @@ Instrument parse_instrument(const std::string& str) // std::experimental::string
 				if (tagCode != "1145" || expiryDate)
 				{
 					auto p = instr.attributes.emplace(tagName, std::move(value));
+
 					assert(p.second);
+					(void)p;
 
 					//auto it = p.first;
 					//std::cout << it->first << " " << it->second << std::endl;
@@ -133,6 +135,8 @@ int main()
 	udp_client client(io_service, "localhost", 1234);
 
 	std::vector<Instrument> instruments = load("secdef.dat");
+
+	std::cout << "ctor=" << Tracker<Instrument>::ctor << " copies=" << Tracker<Instrument>::copies << " moves=" << Tracker<Instrument>::moves << std::endl;
 
 	while (1)
 	{
