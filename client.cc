@@ -57,7 +57,7 @@ Instrument parse_instrument(const std::string& str) // std::experimental::string
 			const std::string& tagCode = p.second;
 			const std::size_t tagSize = tagCode.size();
 
-			if (tagSize == tagLength && str.substr(startTag, tagSize) == tagCode)
+			if (tagSize == tagLength && tagCode == std::experimental::string_view(str.c_str() + startTag, tagSize))
 			{
 				std::string value = str.substr(startValue, valueLength);
 				if (tagCode == "865") // FIX
