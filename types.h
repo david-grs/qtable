@@ -5,10 +5,101 @@
 #include <unordered_map>
 #include <experimental/string_view>
 
+#include <boost/optional.hpp>
+
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 
-using InstrumentId = int64_t;
+// cf https://www.cmegroup.com/confluence/display/EPICSANDBOX/MDP+3.0+-+Security+Definition
+
+#define FIX_TAGS \
+	FIX_TAG(SecurityExchange, 207) \
+	FIX_TAG(SecurityGroup, 1151) \
+	FIX_TAG(Asset, 6937) \
+	FIX_TAG(InstrumentName, 55) \
+	FIX_TAG(SecurityID, 48) \
+	FIX_TAG(SecurityType, 167) /* OOF or FUT */ \
+	FIX_TAG(CFICode, 461) \
+	FIX_TAG(Currency, 15) \
+	FIX_TAG(MinPriceIncrement, 969) \
+	FIX_TAG(StrikePrice, 202) /* only outright */ \
+	FIX_TAG(TradingReferencePrice, 1150) \
+	FIX_TAG(UnderlyingSymbol, 311) /* only outright */ \
+	FIX_TAG(EventType, 865) /* 7=Last eligible trade date */ \
+	FIX_TAG(EventTime, 1145) /* UTCTimestamp */ \
+
+static std::unordered_map<int, std::string> FIXTagNames = {{
+#define FIX_TAG(name, code) {code, #name},
+	FIX_TAGS
+#undef FIX_TAG
+}};
+
+struct FIXTag
+{
+	explicit FIXTag(const int code) :
+		mCode(code)
+	{
+	}
+
+	int GetCode() const { return mCode; }
+
+	const std::string& GetName() const
+	{
+		if (!mName)
+		{
+			static const std::string Unknown = "???";
+
+			auto it = FIXTagNames.find(mCode);
+			if (it == FIXTagNames.cend())
+				mName = Unknown;
+			else
+				mName = it->second;
+		}
+
+		return *mName;
+	}
+
+private:
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive & ar, const unsigned int /*version*/)
+	{
+		ar & mCode;
+	}
+
+	const int mCode;
+	mutable boost::optional<const std::string&> mName;
+};
+
+inline std::ostream& operator<<(std::ostream& oss, const FIXTag& tag)
+{
+	return oss << tag.GetName();
+}
+
+namespace std {
+
+template <>
+struct hash<FIXTag>
+{
+	inline std::size_t operator()(const FIXTag& tag) const
+	{
+		return std::hash<int>()(tag.GetCode());
+	}
+};
+
+}
+
+static constexpr std::size_t FIXTagsCount = 0
+#define FIX_TAG(name, code) + 1
+	FIX_TAGS
+#undef FIX_TAG
+;
+
+static std::vector<FIXTag> FIXTags = {{
+#define FIX_TAG(name, code) FIXTag(code),
+	FIX_TAGS
+#undef FIX_TAG
+}};
 
 template <typename Obj>
 struct Tracker
@@ -32,6 +123,8 @@ template <typename Obj> std::size_t Tracker<Obj>::ctor = 0;
 template <typename Obj> std::size_t Tracker<Obj>::dtor = 0;
 template <typename Obj> std::size_t Tracker<Obj>::copies = 0;
 template <typename Obj> std::size_t Tracker<Obj>::moves = 0;
+
+using InstrumentId = int64_t;
 
 struct Instrument : Tracker<Instrument>
 {
@@ -58,13 +151,13 @@ private:
 	InstrumentId id;
 	std::string  market;
 	std::string  feedcode;
-	std::unordered_map<std::experimental::string_view, std::string> attributes;
+	std::unordered_map<FIXTag, std::string> attributes;
 
 	friend class boost::serialization::access;
 	template<class Archive>
 	void serialize(Archive & ar, const unsigned int /*version*/)
 	{
-		ar & id & market & feedcode;
+		ar & id & market & feedcode & attributes;
 	}
 };
 
