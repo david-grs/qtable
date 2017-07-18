@@ -1,3 +1,5 @@
+#include <string>
+
 #include "udp_client.h"
 #include "proto.h"
 #include "futils.h"
@@ -5,16 +7,25 @@
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
 
+#include <array>
+#include <vector>
 #include <thread>
 #include <chrono>
 #include <experimental/string_view>
 #include <cassert>
 
+template <typename T, typename... Args>
+constexpr auto make_array(T&& t, Args... args)
+{
+	return std::array<T, sizeof...(Args) + 1>{t, args...};
+}
+
 Instrument parse_instrument(const std::string& str) // std::experimental::string_view
 {
 	// cf https://www.cmegroup.com/confluence/display/EPICSANDBOX/MDP+3.0+-+Security+Definition
-	static std::vector<std::pair<std::string, std::string>> FIXTags {
-#define TAG(name, code) {#name, #code}
+	static auto FIXTags = make_array(
+//#define TAG(name, code) std::make_pair(std::string(#name), std::string(#code))
+#define TAG(name, code) std::make_pair(std::experimental::string_view(#name), std::experimental::string_view(#code))
 	TAG(SecurityExchange, 207),
 	TAG(SecurityGroup, 1151),
 	TAG(Asset, 6937),
@@ -28,10 +39,11 @@ Instrument parse_instrument(const std::string& str) // std::experimental::string
 	TAG(TradingReferencePrice, 1150),
 	TAG(UnderlyingSymbol, 311), // only for outright
 	TAG(EventType, 865), // 7=Last eligible trade date
-	TAG(EventTime, 1145), // UTCTimestamp
+	TAG(EventTime, 1145) // UTCTimestamp
 #undef TAG
-	};
+	);
 
+	std::array<bool, FIXTags.size()> parsed{};
 	Instrument instr;
 	bool expiryDate = false;
 
@@ -51,10 +63,15 @@ Instrument parse_instrument(const std::string& str) // std::experimental::string
 		if (startValue >= str.size() || valueLength == 0)
 			throw std::runtime_error("invalid security definition");
 
-		for (const auto& p : FIXTags)
+		for (std::size_t t = 0; t < FIXTags.size(); ++t)
 		{
-			const std::string& tagName = p.first;
-			const std::string& tagCode = p.second;
+			if (parsed[t])
+				continue;
+
+			const auto& p = FIXTags[t];
+
+			const auto& tagName = p.first;
+			const auto& tagCode = p.second;
 			const std::size_t tagSize = tagCode.size();
 
 			if (tagSize == tagLength && tagCode == std::experimental::string_view(str.c_str() + startTag, tagSize))
@@ -73,6 +90,7 @@ Instrument parse_instrument(const std::string& str) // std::experimental::string
 					assert(p.second);
 					(void)p;
 
+					parsed[t] = true;
 					//auto it = p.first;
 					//std::cout << it->first << " " << it->second << std::endl;
 				}
@@ -115,8 +133,8 @@ std::vector<Instrument> load(const std::string& filename)
 	});
 
 	auto end = std::chrono::steady_clock::now();
-	std::cout << "loaded " << instruments.size() << " instruments after " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << std::endl;
 
+	std::cout << "loaded " << instruments.size() << " instruments after " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << std::endl;
 	return instruments;
 }
 

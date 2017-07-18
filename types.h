@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <experimental/string_view>
 
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
@@ -46,7 +47,7 @@ struct Instrument : Tracker<Instrument>
 	InstrumentId id;
 	std::string  market;
 	std::string  feedcode;
-	std::unordered_map<std::string, std::string> attributes;
+	std::unordered_map<std::experimental::string_view, std::string> attributes;
 
 private:
 	friend class boost::serialization::access;
