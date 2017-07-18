@@ -35,21 +35,26 @@ template <typename Obj> std::size_t Tracker<Obj>::moves = 0;
 
 struct Instrument : Tracker<Instrument>
 {
-	Instrument() =default;
-
-	template <typename MarketT, typename FeedcodeT>
-	Instrument(InstrumentId _id, MarketT&& _market, FeedcodeT&& _feedcode)
-	: 	id(_id),
-		market(std::forward<MarketT>(_market)),
-		feedcode(std::forward<FeedcodeT>(_feedcode))
+	template <typename Market, typename Feedcode, typename Attributes>
+	Instrument(Market&& _market, Feedcode&& _feedcode, Attributes&& _attributes) :
+		id(NextInstrumentId()),
+		market(std::forward<Market>(_market)),
+		feedcode(std::forward<Feedcode>(_feedcode)),
+		attributes(std::forward<Attributes>(_attributes))
 	{ }
+
+private:
+	static InstrumentId NextInstrumentId()
+	{
+		static InstrumentId NextId = 0;
+		return NextId++;
+	}
 
 	InstrumentId id;
 	std::string  market;
 	std::string  feedcode;
 	std::unordered_map<std::experimental::string_view, std::string> attributes;
 
-private:
 	friend class boost::serialization::access;
 	template<class Archive>
 	void serialize(Archive & ar, const unsigned int /*version*/)

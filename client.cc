@@ -6,6 +6,7 @@
 
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/optional.hpp>
 
 #include <array>
 #include <vector>
@@ -20,7 +21,7 @@ constexpr auto make_array(T&& t, Args... args)
 	return std::array<T, sizeof...(Args) + 1>{t, args...};
 }
 
-Instrument parse_instrument(const std::string& str) // std::experimental::string_view
+Instrument parse_instrument(const std::string& str)
 {
 	// cf https://www.cmegroup.com/confluence/display/EPICSANDBOX/MDP+3.0+-+Security+Definition
 	static auto FIXTags = make_array(
@@ -44,7 +45,9 @@ Instrument parse_instrument(const std::string& str) // std::experimental::string
 	);
 
 	std::array<bool, FIXTags.size()> parsed{};
-	Instrument instr;
+	std::string market, feedcode;
+	std::unordered_map<std::experimental::string_view, std::string> attributes;
+
 	bool expiryDate = false;
 
 	for (std::size_t i = 0; i < str.size(); ++i)
@@ -56,7 +59,7 @@ Instrument parse_instrument(const std::string& str) // std::experimental::string
 		const std::size_t separator = str.find('=', i + 1);
 
 		if (separator == std::string::npos)
-			throw std::runtime_error("invalid security definition");
+			throw std::runtime_error("invalid security definition: malformed input");
 
 		const std::size_t tagLength = separator - startTag;
 		const std::size_t startValue = separator + 1;
@@ -83,9 +86,17 @@ Instrument parse_instrument(const std::string& str) // std::experimental::string
 				{
 					expiryDate = value == "7";
 				}
+				else if (tagCode == "207") // ....
+				{
+					market = std::move(value);
+				}
+				else if (tagCode == "55")
+				{
+					feedcode = std::move(value);
+				}
 				else if (tagCode != "1145" || expiryDate)
 				{
-					auto p = instr.attributes.emplace(tagName, std::move(value));
+					auto p = attributes.emplace(tagName, std::move(value));
 
 					assert(p.second);
 					(void)p;
@@ -98,7 +109,10 @@ Instrument parse_instrument(const std::string& str) // std::experimental::string
 		}
 	}
 
-	return instr;
+	if (market.empty() || feedcode.empty())
+		throw std::runtime_error("invalid security definition: invalid market/feedcode");
+
+	return Instrument(std::move(market), std::move(feedcode), std::move(attributes));
 }
 
 std::vector<Instrument> load(const std::string& filename)
@@ -113,17 +127,7 @@ std::vector<Instrument> load(const std::string& filename)
 	cpp::for_each_line(content, [&](const std::string& line)
 	{
 		instruments.push_back(parse_instrument(line));
-
-#if 0
-			static const boost::regex LineValidator//("([A-Za-z]+),([A-Za-z0-9]+),[0-9]+\\.[0-9]+)
-			boost::smatch groups;
-
-			if (!boost::regex_match(line, groups, LineValidator) || groups.size() != 3)
-			{
-				std::cerr << "malformed line, ignoring" << std::endl;
-				return;
-			}
-#endif
+		//std::cout << instruments.back() << std::endl;
 	});
 
 	auto end = std::chrono::steady_clock::now();
