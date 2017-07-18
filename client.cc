@@ -17,7 +17,7 @@
 
 Instrument parse_instrument(const std::string& str)
 {
-	std::array<bool, FIXTags.size()> parsed{};
+	std::array<bool, FIXTagsCount> parsed{};
 	std::string market, feedcode;
 	std::unordered_map<FIXTag, std::string> attributes;
 
@@ -46,30 +46,30 @@ Instrument parse_instrument(const std::string& str)
 			if (parsed[t])
 				continue;
 
-			const auto& p = FIXTags[t];
+			const FIXTag& tag = FIXTags[t];
 
-			const auto& tagName = p.first;
-			const auto& tagCode = p.second;
-			const std::size_t tagSize = tagCode.size();
+			const FIXTagCode tagCode = tag.GetCode();
+			const std::string& tagCodeStr = tag.GetCodeStr();
+			const std::size_t tagSize = tagCodeStr.size();
 
-			if (tagSize == tagLength && tagCode == std::experimental::string_view(str.c_str() + startTag, tagSize))
+			if (tagSize == tagLength && tagCodeStr == std::experimental::string_view(str.c_str() + startTag, tagSize))
 			{
 				std::string value = str.substr(startValue, valueLength);
-				if (tagCode == "865") // FIX
+				if (tagCode == FIXTagCode::EventType) // FIX
 				{
 					expiryDate = value == "7";
 				}
-				else if (tagCode == "207") // ....
+				else if (tagCode == FIXTagCode::SecurityExchange)
 				{
 					market = std::move(value);
 				}
-				else if (tagCode == "55")
+				else if (tagCode == FIXTagCode::InstrumentName)
 				{
 					feedcode = std::move(value);
 				}
-				else if (tagCode != "1145" || expiryDate)
+				else if (tagCode != FIXTagCode::EventTime || expiryDate)
 				{
-					auto p = attributes.emplace(tagName, std::move(value));
+					auto p = attributes.emplace(tag, std::move(value));
 
 					assert(p.second);
 					(void)p;

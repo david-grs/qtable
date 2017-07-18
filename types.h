@@ -73,6 +73,8 @@ struct FIXTag
 		return *mName;
 	}
 
+	bool operator==(const FIXTag& rhs) const { return GetCode() == rhs.GetCode(); }
+
 private:
 	friend class boost::serialization::access;
 	template<class Archive>
