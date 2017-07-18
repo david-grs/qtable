@@ -15,38 +15,11 @@
 #include <experimental/string_view>
 #include <cassert>
 
-template <typename T, typename... Args>
-constexpr auto make_array(T&& t, Args... args)
-{
-	return std::array<T, sizeof...(Args) + 1>{t, args...};
-}
-
 Instrument parse_instrument(const std::string& str)
 {
-	// cf https://www.cmegroup.com/confluence/display/EPICSANDBOX/MDP+3.0+-+Security+Definition
-	static auto FIXTags = make_array(
-//#define TAG(name, code) std::make_pair(std::string(#name), std::string(#code))
-#define TAG(name, code) std::make_pair(std::experimental::string_view(#name), std::experimental::string_view(#code))
-	TAG(SecurityExchange, 207),
-	TAG(SecurityGroup, 1151),
-	TAG(Asset, 6937),
-	TAG(InstrumentName, 55),
-	TAG(SecurityID, 48),
-	TAG(SecurityType, 167), // OOF or FUT
-	TAG(CFICode, 461),
-	TAG(Currency, 15),
-	TAG(MinPriceIncrement, 969),
-	TAG(StrikePrice, 202), // only for outright
-	TAG(TradingReferencePrice, 1150),
-	TAG(UnderlyingSymbol, 311), // only for outright
-	TAG(EventType, 865), // 7=Last eligible trade date
-	TAG(EventTime, 1145) // UTCTimestamp
-#undef TAG
-	);
-
 	std::array<bool, FIXTags.size()> parsed{};
 	std::string market, feedcode;
-	std::unordered_map<std::experimental::string_view, std::string> attributes;
+	std::unordered_map<FIXTag, std::string> attributes;
 
 	bool expiryDate = false;
 
