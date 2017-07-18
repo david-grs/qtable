@@ -43,6 +43,13 @@ struct FIXTag
 
 	int GetCode() const { return mCode; }
 
+	const std::string& GetCodeStr() const
+	{
+		if (!mCodeStr)
+			mCodeStr = std::to_string(mCode);
+		return *mCodeStr;
+	}
+
 	const std::string& GetName() const
 	{
 		if (!mName)
@@ -68,6 +75,7 @@ private:
 	}
 
 	const int mCode;
+	mutable boost::optional<std::string> mCodeStr;
 	mutable boost::optional<const std::string&> mName;
 };
 
@@ -95,7 +103,7 @@ static constexpr std::size_t FIXTagsCount = 0
 #undef FIX_TAG
 ;
 
-static std::vector<FIXTag> FIXTags = {{
+static const std::vector<FIXTag> FIXTags = {{
 #define FIX_TAG(name, code) FIXTag(code),
 	FIX_TAGS
 #undef FIX_TAG
