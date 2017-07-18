@@ -8,7 +8,7 @@
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 
-using InstrumentId = int;
+using InstrumentId = int64_t;
 
 template <typename Obj>
 struct Tracker

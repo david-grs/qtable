@@ -82,10 +82,8 @@ Instrument parse_instrument(const std::string& str) // std::experimental::string
 				if (tagCode == "865") // FIX
 				{
 					expiryDate = value == "7";
-					continue;
 				}
-
-				if (tagCode != "1145" || expiryDate)
+				else if (tagCode != "1145" || expiryDate)
 				{
 					auto p = instr.attributes.emplace(tagName, std::move(value));
 
@@ -94,6 +92,8 @@ Instrument parse_instrument(const std::string& str) // std::experimental::string
 
 					parsed[t] = true;
 				}
+
+				break;
 			}
 		}
 	}
