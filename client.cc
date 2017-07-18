@@ -91,16 +91,8 @@ Instrument parse_instrument(const std::string& str) // std::experimental::string
 					(void)p;
 
 					parsed[t] = true;
-					//auto it = p.first;
-					//std::cout << it->first << " " << it->second << std::endl;
 				}
 			}
-#if 0
-			else
-			{
-				std::cout << "fail " << startTag << " " << startValue << " " << valueLength << " " << str.substr(startTag, tagSize) << std::endl;
-			}
-#endif
 		}
 	}
 
