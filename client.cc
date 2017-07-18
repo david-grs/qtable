@@ -65,7 +65,7 @@ Instrument parse_instrument(const std::string& str)
 		const std::size_t startValue = separator + 1;
 		const std::size_t nextPair = str.find(0x01, startValue + 1);
 
-		const std::size_t valueLength = nextPair != std::string::npos ? nextPair - startValue - 1 : str.size() - startValue;
+		const std::size_t valueLength = nextPair != std::string::npos ? nextPair - startValue : str.size() - startValue;
 		i = nextPair;
 
 		for (std::size_t t = 0; t < FIXTags.size(); ++t)
