@@ -28,25 +28,32 @@
 	FIX_TAG(EventType, 865) /* 7=Last eligible trade date */ \
 	FIX_TAG(EventTime, 1145) /* UTCTimestamp */ \
 
-static std::unordered_map<int, std::string> FIXTagNames = {{
-#define FIX_TAG(name, code) {code, #name},
+enum struct FIXTagCode : int
+{
+#define FIX_TAG(name, code) name,
+	FIX_TAGS
+#undef FIX_TAG
+};
+
+static std::unordered_map<FIXTagCode, std::string> FIXTagNames = {{
+#define FIX_TAG(name, code) {FIXTagCode:: name, #name},
 	FIX_TAGS
 #undef FIX_TAG
 }};
 
 struct FIXTag
 {
-	explicit FIXTag(const int code) :
+	explicit FIXTag(const FIXTagCode code) :
 		mCode(code)
 	{
 	}
 
-	int GetCode() const { return mCode; }
+	FIXTagCode GetCode() const { return mCode; }
 
 	const std::string& GetCodeStr() const
 	{
 		if (!mCodeStr)
-			mCodeStr = std::to_string(mCode);
+			mCodeStr = std::to_string(static_cast<int>(mCode));
 		return *mCodeStr;
 	}
 
@@ -71,10 +78,10 @@ private:
 	template<class Archive>
 	void serialize(Archive & ar, const unsigned int /*version*/)
 	{
-		ar & mCode;
+		ar & static_cast<int>(mCode);
 	}
 
-	const int mCode;
+	const FIXTagCode mCode;
 	mutable boost::optional<std::string> mCodeStr;
 	mutable boost::optional<const std::string&> mName;
 };
@@ -91,7 +98,7 @@ struct hash<FIXTag>
 {
 	inline std::size_t operator()(const FIXTag& tag) const
 	{
-		return std::hash<int>()(tag.GetCode());
+		return std::hash<int>()(static_cast<int>(tag.GetCode()));
 	}
 };
 
@@ -104,7 +111,7 @@ static constexpr std::size_t FIXTagsCount = 0
 ;
 
 static const std::vector<FIXTag> FIXTags = {{
-#define FIX_TAG(name, code) FIXTag(code),
+#define FIX_TAG(name, code) FIXTag(FIXTagCode:: name),
 	FIX_TAGS
 #undef FIX_TAG
 }};
