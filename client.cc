@@ -53,15 +53,17 @@ Instrument parse_instrument(const std::string& str) // std::experimental::string
 			continue;
 
 		const std::size_t startTag = i;
-		for (; i < str.size() && str[i] != '='; ++i);
+		const std::size_t separator = str.find('=', i + 1);
 
-		const std::size_t tagLength = i - startTag;
-		const std::size_t startValue = ++i;
-		for (; i < str.size() && str[i] != 0x01; ++i);
-		const std::size_t valueLength = i - startValue;
-
-		if (startValue >= str.size() || valueLength == 0)
+		if (separator == std::string::npos)
 			throw std::runtime_error("invalid security definition");
+
+		const std::size_t tagLength = separator - startTag;
+		const std::size_t startValue = separator + 1;
+		const std::size_t nextPair = str.find(0x01, startValue + 1);
+
+		const std::size_t valueLength = nextPair != std::string::npos ? nextPair - startValue - 1 : str.size() - startValue;
+		i = nextPair;
 
 		for (std::size_t t = 0; t < FIXTags.size(); ++t)
 		{
