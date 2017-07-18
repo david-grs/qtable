@@ -43,6 +43,11 @@ struct Instrument : Tracker<Instrument>
 		attributes(std::forward<Attributes>(_attributes))
 	{ }
 
+	int64_t GetId() const { return id; }
+	const std::string& GetMarket() const { return market; }
+	const std::string& GetFeedcode() const { return feedcode; }
+	const auto& GetAttributes() const { return attributes; }
+
 private:
 	static InstrumentId NextInstrumentId()
 	{
@@ -62,6 +67,15 @@ private:
 		ar & id & market & feedcode;
 	}
 };
+
+
+inline std::ostream& operator<<(std::ostream& oss, const Instrument& instr)
+{
+	oss << instr.GetMarket() << ":" << instr.GetFeedcode() << " attributes={";
+	for (const auto& p : instr.GetAttributes())
+		oss << p.first << "=" << p.second << " ";
+	return oss << "}";
+}
 
 struct DepthEntry
 {

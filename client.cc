@@ -127,7 +127,7 @@ std::vector<Instrument> load(const std::string& filename)
 	cpp::for_each_line(content, [&](const std::string& line)
 	{
 		instruments.push_back(parse_instrument(line));
-		//std::cout << instruments.back() << std::endl;
+		std::cout << instruments.back() << std::endl;
 	});
 
 	auto end = std::chrono::steady_clock::now();
