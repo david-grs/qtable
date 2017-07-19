@@ -6,7 +6,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z -Wall -Wextra")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z -Wall -Wextra -g")
 
 #set(CMAKE_CXX_COMPILER "clang++")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z -lc++ -stdlib=libc++")
