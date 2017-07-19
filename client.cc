@@ -17,7 +17,6 @@
 
 Instrument parse_instrument(const std::string& str)
 {
-	std::array<bool, FIXTagsCount> parsed{};
 	std::string market, feedcode;
 	std::unordered_map<FIXTag, std::string> attributes;
 
@@ -34,50 +33,39 @@ Instrument parse_instrument(const std::string& str)
 		if (separator == std::string::npos)
 			throw std::runtime_error("invalid security definition: malformed input");
 
-		const std::size_t tagLength = separator - startTag;
+		const std::size_t tagSize = separator - startTag;
 		const std::size_t startValue = separator + 1;
 		const std::size_t nextPair = str.find(0x01, startValue + 1);
 
 		const std::size_t valueLength = nextPair != std::string::npos ? nextPair - startValue : str.size() - startValue;
 		i = nextPair;
 
-		for (std::size_t t = 0; t < FIXTags.size(); ++t)
+		std::experimental::string_view codeStr(str.c_str() + startTag, tagSize);
+		auto it = FIXTagsByCode.find(codeStr);
+		if (it != FIXTagsByCode.cend())
 		{
-			if (parsed[t])
-				continue;
+			const FIXTag& tag = it->second;
+			FIXTagCode tagCode = tag.GetCode();
 
-			const FIXTag& tag = FIXTags[t];
-
-			const FIXTagCode tagCode = tag.GetCode();
-			const std::string& tagCodeStr = tag.GetCodeStr();
-			const std::size_t tagSize = tagCodeStr.size();
-
-			if (tagSize == tagLength && tagCodeStr == std::experimental::string_view(str.c_str() + startTag, tagSize))
+			std::string value = str.substr(startValue, valueLength);
+			if (tagCode == FIXTagCode::EventType) // FIX
 			{
-				std::string value = str.substr(startValue, valueLength);
-				if (tagCode == FIXTagCode::EventType) // FIX
-				{
-					expiryDate = value == "7";
-				}
-				else if (tagCode == FIXTagCode::SecurityExchange)
-				{
-					market = std::move(value);
-				}
-				else if (tagCode == FIXTagCode::InstrumentName)
-				{
-					feedcode = std::move(value);
-				}
-				else if (tagCode != FIXTagCode::EventTime || expiryDate)
-				{
-					auto p = attributes.emplace(tag, std::move(value));
+				expiryDate = value == "7";
+			}
+			else if (tagCode == FIXTagCode::SecurityExchange)
+			{
+				market = std::move(value);
+			}
+			else if (tagCode == FIXTagCode::InstrumentName)
+			{
+				feedcode = std::move(value);
+			}
+			else if (tagCode != FIXTagCode::EventTime || expiryDate)
+			{
+				auto p = attributes.emplace(tag, std::move(value));
 
-					assert(p.second);
-					(void)p;
-
-					parsed[t] = true;
-				}
-
-				break;
+				assert(p.second);
+				(void)p;
 			}
 		}
 	}
@@ -100,7 +88,7 @@ std::vector<Instrument> load(const std::string& filename)
 	cpp::for_each_line(content, [&](const std::string& line)
 	{
 		instruments.push_back(parse_instrument(line));
-		std::cout << instruments.back() << std::endl;
+		//std::cout << instruments.back() << std::endl;
 	});
 
 	auto end = std::chrono::steady_clock::now();

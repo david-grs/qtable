@@ -1,9 +1,5 @@
 #pragma once
 
-#include <vector>
-#include <string>
-#include <unordered_map>
-
 #include <boost/optional.hpp>
 
 #include <boost/serialization/serialization.hpp>
@@ -12,6 +8,11 @@
 
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
+
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <experimental/string_view>
 
 // cf https://www.cmegroup.com/confluence/display/EPICSANDBOX/MDP+3.0+-+Security+Definition
 
@@ -131,6 +132,11 @@ static const std::vector<FIXTag> FIXTags = {{
 	FIX_TAGS
 #undef FIX_TAG
 }};
+static const std::unordered_map<std::experimental::string_view, FIXTag> FIXTagsByCode = {
+#define FIX_TAG(name, code) {std::experimental::string_view(#code), FIXTag(FIXTagCode:: name)},
+	FIX_TAGS
+#undef FIX_TAG
+};
 
 template <typename Obj>
 struct Tracker
