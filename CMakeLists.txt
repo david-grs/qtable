@@ -8,6 +8,9 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z -Wall -Wextra -g")
 
+# Boost.1.58 using / declaring auto_ptr
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
+
 #set(CMAKE_CXX_COMPILER "clang++")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z -lc++ -stdlib=libc++")
 
