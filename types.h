@@ -3,9 +3,12 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
-#include <experimental/string_view>
 
 #include <boost/optional.hpp>
+
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/unordered_map.hpp>
+#include <boost/serialization/split_member.hpp>
 
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
@@ -30,7 +33,7 @@
 
 enum struct FIXTagCode : int
 {
-#define FIX_TAG(name, code) name,
+#define FIX_TAG(name, code) name = code,
 	FIX_TAGS
 #undef FIX_TAG
 };
@@ -77,13 +80,24 @@ struct FIXTag
 
 private:
 	friend class boost::serialization::access;
+
 	template<class Archive>
-	void serialize(Archive & ar, const unsigned int /*version*/)
+	void save(Archive& ar, const unsigned int) const
 	{
-		ar & static_cast<int>(mCode);
+		ar & static_cast<const int>(mCode);
 	}
 
-	const FIXTagCode mCode;
+	template<class Archive>
+	void load(Archive& ar, const unsigned int)
+	{
+		int code;
+		ar & code;
+
+		mCode = static_cast<FIXTagCode>(code);
+	}
+	BOOST_SERIALIZATION_SPLIT_MEMBER()
+
+	FIXTagCode mCode;
 	mutable boost::optional<std::string> mCodeStr;
 	mutable boost::optional<const std::string&> mName;
 };
