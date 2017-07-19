@@ -6,7 +6,10 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-add_definitions("-Wall -Wextra")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z -Wall -Wextra")
+
+#set(CMAKE_CXX_COMPILER "clang++")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z -lc++ -stdlib=libc++")
 
 find_package(Boost REQUIRED COMPONENTS regex system serialization iostreams)
 include_directories(${Boost_INCLUDE_DIRS})
