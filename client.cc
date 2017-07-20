@@ -87,7 +87,9 @@ std::vector<Instrument> load(const std::string& filename)
 
 	cpp::for_each_line(content, [&](const std::string& line)
 	{
-		instruments.push_back(parse_instrument(line));
+		Instrument instr = parse_instrument(line);
+		if (instr.GetFeedcode().substr(0, 2) == "OZ")
+			instruments.push_back(std::move(instr));
 		//std::cout << instruments.back() << std::endl;
 	});
 
@@ -112,14 +114,14 @@ int main()
 	udp_client client(io_service, "localhost", 1234);
 
 	std::vector<Instrument> instruments = load("secdef.dat");
+	send_instrument_definitions(client, instruments);
 
-	std::cout << "ctor=" << Tracker<Instrument>::ctor << " copies=" << Tracker<Instrument>::copies << " moves=" << Tracker<Instrument>::moves << std::endl;
+	//std::cout << "ctor=" << Tracker<Instrument>::ctor << " copies=" << Tracker<Instrument>::copies << " moves=" << Tracker<Instrument>::moves << std::endl;
 
 	while (1)
 	{
 		std::cout << "send" << std::endl;
 		std::this_thread::sleep_for(std::chrono::seconds(1));
-		send_instrument_definitions(client, instruments);
 	}
 
 	return 0;
