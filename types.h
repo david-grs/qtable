@@ -165,6 +165,8 @@ using InstrumentId = int64_t;
 
 struct Instrument : Tracker<Instrument>
 {
+	Instrument() =default;
+
 	template <typename Market, typename Feedcode, typename Attributes>
 	Instrument(Market&& _market, Feedcode&& _feedcode, Attributes&& _attributes) :
 		id(NextInstrumentId()),
