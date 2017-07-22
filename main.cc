@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "udp_server.h"
+#include "proto.h"
 
 #include <QApplication>
 
@@ -17,7 +18,21 @@ int main( int argc, char **argv )
 	QObject::connect(&window, &MainWindow::closed, [&run]() { run = false; });
 
 	boost::asio::io_service io_service;
-	udp_server serv(io_service, 1234);
+
+	udp_server serv(io_service, 1234, [&](std::experimental::string_view str)
+	{
+		std::cout << "received " << str.size() << " bytes" << std::endl;
+
+		std::stringstream strm;
+		strm.write(str.data(), str.size());
+
+		boost::archive::binary_iarchive archive(strm);
+
+		Instrument instr;
+		archive >> instr;
+
+		std::cout << "received instrument " << instr << std::endl;
+	});
 
 	while (run)
 	{
