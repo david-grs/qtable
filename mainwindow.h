@@ -29,7 +29,7 @@ private:
 	void mouseMoveEvent(QMouseEvent *event);
 
 protected:
-	void closeEvent(QCloseEvent *event) { emit closed(); }
+	void closeEvent(QCloseEvent*) { emit closed(); }
 
 	QString mJQuery;
 	QPoint mPosition;
