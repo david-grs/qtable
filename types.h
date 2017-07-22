@@ -3,6 +3,7 @@
 #include <boost/optional.hpp>
 
 #include <boost/serialization/serialization.hpp>
+#include <boost/serialization/utility.hpp>
 #include <boost/serialization/unordered_map.hpp>
 #include <boost/serialization/split_member.hpp>
 
@@ -47,6 +48,8 @@ static std::unordered_map<FIXTagCode, std::string> FIXTagNames = {{
 
 struct FIXTag
 {
+	FIXTag() =default;
+
 	explicit FIXTag(const FIXTagCode code) :
 		mCode(code)
 	{
