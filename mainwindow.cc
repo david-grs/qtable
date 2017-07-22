@@ -88,8 +88,8 @@ void MainWindow::finishLoading(bool ok)
 
 	QWebFrame* frame = mWebView->page()->mainFrame();
 
-	QSize tableSize = frame->findFirstElement("table").geometry().size();
-	resize(tableSize);
+	//QSize tableSize = frame->findFirstElement("table").geometry().size();
+	//resize(tableSize);
 
 	frame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
 	frame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAsNeeded);

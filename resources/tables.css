@@ -13,6 +13,9 @@ html *
 
 body
 {
+	/*background-color: LightGrey;*/
+	/*background-color: Linen;*/
+	background-color: WhiteSmoke;
 	margin: 0px;
 	padding: 0px;
 }
