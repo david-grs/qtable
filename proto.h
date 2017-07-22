@@ -6,6 +6,7 @@
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/asio/buffer.hpp>
 
+#include <experimental/string_view>
 #include <sstream>
 
 namespace proto
@@ -52,10 +53,10 @@ std::string serialize(const T& t)
 }
 
 template <typename T>
-T deserialize(const std::string& str)
+T deserialize(const std::experimental::string_view& str)
 {
 	std::stringstream strm;
-	strm.write(str.c_str(), str.size());
+	strm.write(str.data(), str.size());
 
 	boost::archive::binary_iarchive archive(strm);
 
