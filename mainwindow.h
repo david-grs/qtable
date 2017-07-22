@@ -7,12 +7,16 @@ class QWebEngineView;
 class QLineEdit;
 class QPoint;
 
+struct Instrument;
+
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 
 public:
 	explicit MainWindow();
+
+	void OnInstrumentAdded(Instrument&& instr);
 
 signals:
 	void closed();

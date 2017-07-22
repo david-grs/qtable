@@ -21,7 +21,7 @@ int main( int argc, char **argv )
 
 	udp_server serv(io_service, 1234, [&](std::experimental::string_view str)
 	{
-		std::cout << "received " << str.size() << " bytes" << std::endl;
+		//std::cout << "received " << str.size() << " bytes" << std::endl;
 
 		std::stringstream strm;
 		strm.write(str.data(), str.size());
@@ -31,7 +31,7 @@ int main( int argc, char **argv )
 		Instrument instr;
 		archive >> instr;
 
-		std::cout << "received instrument " << instr << std::endl;
+		window.OnInstrumentAdded(std::move(instr));
 	});
 
 	while (run)

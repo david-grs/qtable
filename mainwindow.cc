@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "types.h"
 
 #include <QtWidgets>
 
@@ -28,6 +29,11 @@ MainWindow::MainWindow()
 
 	mWebView->setContextMenuPolicy(Qt::CustomContextMenu); // disable default context menu (on right click) with Reload
 	mWebView->installEventFilter(this); // forward mouse events from the widget to this object
+}
+
+void MainWindow::OnInstrumentAdded(Instrument&& instr)
+{
+
 }
 
 void MainWindow::setHtml(const QString& html)
