@@ -19,7 +19,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 find_package(Qt5Widgets REQUIRED)
 qt5_add_resources(UI_RESOURCES resources.qrc)
-add_executable(qtable main.cc mainwindow.cc udp_server.h ${UI_RESOURCES})
+add_executable(qtable main.cc mainwindow.cc model.cc model.h html_table.cc html_table.h interfaces.h udp_server.h ${UI_RESOURCES})
 target_link_libraries(qtable ${Boost_LIBRARIES})
 target_link_libraries(qtable pthread) #Boost_USE_MULTITHREADED does not work on all linux distributions
 

@@ -1,4 +1,6 @@
 #include "mainwindow.h"
+#include "model.h"
+
 #include "udp_server.h"
 #include "proto.h"
 
@@ -13,6 +15,8 @@ int main( int argc, char **argv )
 
 	MainWindow window;
 	window.show();
+
+	Model model(window);
 
 	bool run = true;
 	QObject::connect(&window, &MainWindow::closed, [&run]() { run = false; });
@@ -31,7 +35,7 @@ int main( int argc, char **argv )
 		Instrument instr;
 		archive >> instr;
 
-		window.OnInstrumentAdded(std::move(instr));
+		model.AddInstrument(std::move(instr));
 	});
 
 	while (run)

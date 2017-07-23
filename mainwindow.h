@@ -1,5 +1,7 @@
 #pragma once
 
+#include "interfaces.h"
+
 #include <QtWidgets>
 
 class QWebView;
@@ -9,7 +11,9 @@ class QPoint;
 
 struct Instrument;
 
-class MainWindow : public QMainWindow
+class MainWindow :
+	public QMainWindow,
+	public IView
 {
 	Q_OBJECT
 
