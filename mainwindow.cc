@@ -15,8 +15,10 @@ MainWindow::MainWindow()
 	file.setFileName(":/jquery.js");
 	file.open(QIODevice::ReadOnly);
 	mJQuery = file.readAll();
-	mJQuery.append("\nvar qt = { 'mJQuery': mJQuery.noConflict(true) };");
 	file.close();
+
+	QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+
 
 	mWebView = new QWebView(this);
 
@@ -27,7 +29,7 @@ MainWindow::MainWindow()
 	setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 	setCentralWidget(mWebView);
 
-	mWebView->setContextMenuPolicy(Qt::CustomContextMenu); // disable default context menu (on right click) with Reload
+	//mWebView->setContextMenuPolicy(Qt::CustomContextMenu); // disable default context menu (on right click) with Reload
 	mWebView->installEventFilter(this); // forward mouse events from the widget to this object
 }
 
@@ -94,6 +96,12 @@ void MainWindow::finishLoading(bool ok)
 	frame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
 	frame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAsNeeded);
 	frame->evaluateJavaScript(mJQuery);
+
+	QString code = "$('#table.td:nth-child(2)').hide();";
+	frame->evaluateJavaScript(code);
+
+	//code = "$('#table.td:nth-child(2)').each(function() { alert('12'); }); undefined";
+	//frame->evaluateJavaScript(code);
 }
 
 #if 0

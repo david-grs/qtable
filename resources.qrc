@@ -1,6 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
     <file alias="jquery.js">resources/jquery.min.js</file>
+    <file alias="table.js">resources/table.js</file>
     <file alias="tables.css">resources/tables.css</file>
     <file alias="index.html">resources/index.html</file>
 </qresource>
