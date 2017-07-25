@@ -97,11 +97,8 @@ void MainWindow::finishLoading(bool ok)
 	frame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAsNeeded);
 	frame->evaluateJavaScript(mJQuery);
 
-	QString code = "$('#table.td:nth-child(2)').hide();";
+	QString code = "$('#table td:nth-child(2)').hide(); $('#table th:nth-child(2)').hide();";
 	frame->evaluateJavaScript(code);
-
-	//code = "$('#table.td:nth-child(2)').each(function() { alert('12'); }); undefined";
-	//frame->evaluateJavaScript(code);
 }
 
 #if 0
