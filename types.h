@@ -5,6 +5,7 @@
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/unordered_map.hpp>
+#include <boost/serialization/vector.hpp>
 #include <boost/serialization/split_member.hpp>
 
 #include <boost/archive/binary_iarchive.hpp>
@@ -223,6 +224,20 @@ private:
 	void serialize(Archive & ar, const unsigned int /*version*/)
 	{
 		ar & price & volume;
+	}
+};
+
+struct PriceDepth
+{
+	std::vector<DepthEntry> bids;
+	std::vector<DepthEntry> asks;
+
+private:
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive & ar, const unsigned int /*version*/)
+	{
+		ar & bids & asks;
 	}
 };
 
