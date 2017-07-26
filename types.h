@@ -166,12 +166,12 @@ template <typename Obj> std::size_t Tracker<Obj>::moves = 0;
 
 using InstrumentId = int64_t;
 
-struct Instrument : Tracker<Instrument>
+struct InstrumentDefinition
 {
-	Instrument() =default;
+	InstrumentDefinition() =default;
 
 	template <typename Market, typename Feedcode, typename Attributes>
-	Instrument(Market&& _market, Feedcode&& _feedcode, Attributes&& _attributes) :
+	InstrumentDefinition(Market&& _market, Feedcode&& _feedcode, Attributes&& _attributes) :
 		id(NextInstrumentId()),
 		market(std::forward<Market>(_market)),
 		feedcode(std::forward<Feedcode>(_feedcode)),
@@ -204,7 +204,7 @@ private:
 };
 
 
-inline std::ostream& operator<<(std::ostream& oss, const Instrument& instr)
+inline std::ostream& operator<<(std::ostream& oss, const InstrumentDefinition& instr)
 {
 	oss << instr.GetMarket() << ":" << instr.GetFeedcode() << " attributes={";
 	for (const auto& p : instr.GetAttributes())
@@ -214,8 +214,8 @@ inline std::ostream& operator<<(std::ostream& oss, const Instrument& instr)
 
 struct DepthEntry
 {
-	double price;
-	int    volume;
+	double  price;
+	int64_t volume;
 
 private:
 	friend class boost::serialization::access;
