@@ -1,15 +1,20 @@
 #pragma once
 
-#include "types.h"
+#include "instrument.h"
 
 #include <QString>
 
-struct HtmlTable
-{
-	void AddRow(const Instrument& instrument);
+struct Filter;
 
-	QString ToHtml() const;
+struct HtmlRenderer
+{
+	explicit HtmlRenderer(const Filter& filter) :
+		mFilter(filter)
+	{}
+
+	QString ToHtml(const std::vector<Instrument>& instruments) const;
 
 private:
+	const Filter& mFilter;
 	QString mHtml;
 };

@@ -33,14 +33,9 @@ MainWindow::MainWindow()
 	mWebView->installEventFilter(this); // forward mouse events from the widget to this object
 }
 
-void MainWindow::OnInstrumentAdded(Instrument&& instr)
+void MainWindow::SetHtml(const QString& html)
 {
-
-}
-
-void MainWindow::setHtml(const QString& html)
-{
-	mWebView->page()->mainFrame()->setHtml(html);
+	mWebView->page()->mainFrame()->setHtml(html,  QUrl("qrc:/"));
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
@@ -86,7 +81,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 void MainWindow::finishLoading(bool ok)
 {
 	if (!ok)
-		throw std::runtime_error("cannot load page from resource"); // TODO
+		return;//throw std::runtime_error("cannot load page from resource"); // TODO
 
 	QWebFrame* frame = mWebView->page()->mainFrame();
 

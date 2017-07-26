@@ -20,13 +20,11 @@ class MainWindow :
 public:
 	explicit MainWindow();
 
-	void OnInstrumentAdded(Instrument&& instr);
+	// [IView]
+	void SetHtml(const QString& html) override;
 
 signals:
 	void closed();
-
-public slots:
-	void setHtml(const QString& html);
 
 protected slots:
 	void finishLoading(bool);

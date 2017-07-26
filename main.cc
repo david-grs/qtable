@@ -32,7 +32,7 @@ int main( int argc, char **argv )
 
 		boost::archive::binary_iarchive archive(strm);
 
-		Instrument instr;
+		InstrumentDefinition instr;
 		archive >> instr;
 
 		model.AddInstrument(std::move(instr));

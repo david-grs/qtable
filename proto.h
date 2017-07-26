@@ -12,7 +12,7 @@
 namespace proto
 {
 
-using InstrumentDefinition = Instrument;
+using InstrumentDefinition = InstrumentDefinition;
 
 struct TradeTick
 {

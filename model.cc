@@ -1,26 +1,38 @@
 #include "model.h"
 
+#include <QTimer>
+#include <QDebug>
+#include <QElapsedTimer>
+
 Model::Model(IView& view) :
-	mView(view)
-{}
-
-void Model::AddInstrument(Instrument&& instr)
+	mView(view),
+	mRenderer(mFilter)
 {
-	mInstruments.push_back(std::move(instr));
+	mRenderingTimer = new QTimer(this);
+	connect(mRenderingTimer, SIGNAL(timeout()), this, SLOT(UpdateView()));
+	mRenderingTimer->start(100);
 
-	if (mFilter.Matches(mInstruments.back()))
-		mTable.AddRow(mInstruments.back());
+	UpdateView();
+}
+
+Model::~Model()
+{
+}
+
+void Model::AddInstrument(InstrumentDefinition&& def)
+{
+	mDefinitions.push_back(std::move(def));
+	mInstruments.emplace_back(mDefinitions.back());
 }
 
 void Model::UpdateView()
 {
+	QElapsedTimer timer;
+	timer.start();
 
+	QString html = mRenderer.ToHtml(mInstruments);
+	qDebug() << timer.nsecsElapsed() / 1000.0;
+	mView.SetHtml(html);
+
+	qDebug() << timer.nsecsElapsed() / 1000.0;
 }
-
-
-bool Filter::Matches(const Instrument&)
-{
-	// TODO
-	return true;
-}
-

@@ -15,7 +15,7 @@
 #include <experimental/string_view>
 #include <cassert>
 
-Instrument parse_instrument(const std::string& str)
+InstrumentDefinition parse_instrument(const std::string& str)
 {
 	std::string market, feedcode;
 	std::unordered_map<FIXTag, std::string> attributes;
@@ -73,21 +73,21 @@ Instrument parse_instrument(const std::string& str)
 	if (market.empty() || feedcode.empty())
 		throw std::runtime_error("invalid security definition: invalid market/feedcode");
 
-	return Instrument(std::move(market), std::move(feedcode), std::move(attributes));
+	return InstrumentDefinition(std::move(market), std::move(feedcode), std::move(attributes));
 }
 
-std::vector<Instrument> load(const std::string& filename)
+std::vector<InstrumentDefinition> load(const std::string& filename)
 {
 	auto start = std::chrono::steady_clock::now();
 
-	std::vector<Instrument> instruments;
+	std::vector<InstrumentDefinition> instruments;
 	instruments.reserve(1000000);
 
 	std::string content = cpp::read_all(filename);
 
 	cpp::for_each_line(content, [&](const std::string& line)
 	{
-		Instrument instr = parse_instrument(line);
+		InstrumentDefinition instr = parse_instrument(line);
 		if (instr.GetFeedcode().substr(0, 2) == "OZ")
 			instruments.push_back(std::move(instr));
 		//std::cout << instruments.back() << std::endl;
@@ -99,9 +99,9 @@ std::vector<Instrument> load(const std::string& filename)
 	return instruments;
 }
 
-void send_instrument_definitions(udp_client& client, const std::vector<Instrument>& instruments)
+void send_instrument_definitions(udp_client& client, const std::vector<InstrumentDefinition>& instruments)
 {
-	for (const Instrument& instr : instruments)
+	for (const InstrumentDefinition& instr : instruments)
 	{
 		std::string str = proto::serialize(instr);
 		client.send(str);
@@ -113,7 +113,7 @@ int main()
 	boost::asio::io_service io_service;
 	udp_client client(io_service, "localhost", 1234);
 
-	std::vector<Instrument> instruments = load("secdef.dat");
+	std::vector<InstrumentDefinition> instruments = load("secdef.dat");
 	send_instrument_definitions(client, instruments);
 
 	//std::cout << "ctor=" << Tracker<Instrument>::ctor << " copies=" << Tracker<Instrument>::copies << " moves=" << Tracker<Instrument>::moves << std::endl;

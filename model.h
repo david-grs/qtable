@@ -3,24 +3,35 @@
 #include "interfaces.h"
 #include "types.h"
 
+#include "filter.h"
 #include "html_table.h"
 
-struct Filter
-{
-	bool Matches(const Instrument&);
-};
+#include <QObject>
 
-struct Model : public IModel
+class QTimer;
+
+class Model :
+	public QObject,
+	public IModel
 {
+	Q_OBJECT
+
+public:
 	explicit Model(IView& view);
+	~Model();
 
-	void AddInstrument(Instrument&& instr);
+	void AddInstrument(InstrumentDefinition&& instr);
 
-private:
+private slots:
 	void UpdateView();
 
+private:
 	IView& mView;
-	HtmlTable mTable;
+	HtmlRenderer mRenderer;
 	Filter mFilter;
+
+	std::vector<InstrumentDefinition> mDefinitions;
 	std::vector<Instrument> mInstruments;
+
+	QTimer* mRenderingTimer;
 };
