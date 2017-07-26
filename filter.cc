@@ -2,7 +2,7 @@
 
 #include "instrument.h"
 
-bool Filter::Matches(const Instrument&)
+bool Filter::Matches(const Instrument&) const
 {
 	// TODO
 	return true;

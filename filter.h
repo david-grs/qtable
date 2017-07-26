@@ -4,5 +4,5 @@ struct Instrument;
 
 struct Filter
 {
-	bool Matches(const Instrument&);
+	bool Matches(const Instrument&) const;
 };
