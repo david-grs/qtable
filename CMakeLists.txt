@@ -23,8 +23,8 @@ add_executable(qtable main.cc mainwindow.cc model.cc model.h html_table.cc html_
 target_link_libraries(qtable ${Boost_LIBRARIES})
 target_link_libraries(qtable pthread) #Boost_USE_MULTITHREADED does not work on all linux distributions
 
-qt5_use_modules(qtable Widgets WebKitWidgets)
-# >5.6 qt5_use_modules(qtable Widgets WebEngineWidgets)
+#qt5_use_modules(qtable Widgets WebKitWidgets)
+qt5_use_modules(qtable Widgets WebEngineWidgets)
 # specific kit: -DCMAKE_PREFIX_PATH=~/Qt5.6.2/5.6/gcc_64/lib/cmake/
 
 add_executable(client client.cc udp_client.h proto.h types.h)

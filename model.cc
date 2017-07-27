@@ -10,7 +10,7 @@ Model::Model(IView& view) :
 {
 	mRenderingTimer = new QTimer(this);
 	connect(mRenderingTimer, SIGNAL(timeout()), this, SLOT(UpdateView()));
-	mRenderingTimer->start(100);
+	mRenderingTimer->start(10000);
 
 	UpdateView();
 }
@@ -28,11 +28,12 @@ void Model::AddInstrument(InstrumentDefinition&& def)
 void Model::UpdateView()
 {
 	QElapsedTimer timer;
-	timer.start();
 
+	timer.start();
 	QString html = mRenderer.ToHtml(mInstruments);
 	qDebug() << timer.nsecsElapsed() / 1000.0;
-	mView.SetHtml(html);
 
+	timer.restart();
+	mView.SetHtml(html);
 	qDebug() << timer.nsecsElapsed() / 1000.0;
 }

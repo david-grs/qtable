@@ -5,8 +5,10 @@
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
 #include <QtWebKitWidgets>
+#include <QWebSettings>
 #else
-#include <QWebEnginemWebView>
+#include <QWebEngineView>
+#include <QWebEngineSettings>
 #endif
 
 MainWindow::MainWindow()
@@ -17,10 +19,17 @@ MainWindow::MainWindow()
 	mJQuery = file.readAll();
 	file.close();
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
 	QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-
-
 	mWebView = new QWebView(this);
+#else
+	//QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::DeveloperExtrasEnabled, true);
+	// enable it via an environment variable QTWEBENGINE_REMOTE_DEBUGGING=<port>. You can put 0.0.0.0:<port> if you are doing debugging of an embedded device
+	// and cant use the local console. Then you can point can connect to http://127.0.0.1: to get the debugger. It will need to be a chromium based browser.
+	// do you have to use Chrome, or you can actually use the "quick nano browser" example if you want.
+
+	mWebView = new QWebEngineView(this);
+#endif
 
 	mWebView->setUrl(QUrl("qrc:/index.html"));
 	connect(mWebView, SIGNAL(loadFinished(bool)), SLOT(finishLoading(bool)));
@@ -35,7 +44,12 @@ MainWindow::MainWindow()
 
 void MainWindow::SetHtml(const QString& html)
 {
-	mWebView->page()->mainFrame()->setHtml(html,  QUrl("qrc:/"));
+	//mWebView->page()->mainFrame()->setHtml(html,  QUrl("qrc:/"));
+
+	mWebView->page()->setHtml(html, QUrl("qrc:/"));
+	mWebView->page();
+	//QWebElement table = mWebView->page()->mainFrame()->findFirstElement("table");
+	//table.setInnerXml(html);
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
@@ -81,19 +95,22 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 void MainWindow::finishLoading(bool ok)
 {
 	if (!ok)
+	{
+		qDebug() << "page failed to load";
 		return;//throw std::runtime_error("cannot load page from resource"); // TODO
+	}
+	qDebug() << "page successfully loaded";
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
 	QWebFrame* frame = mWebView->page()->mainFrame();
-
-	//QSize tableSize = frame->findFirstElement("table").geometry().size();
-	//resize(tableSize);
 
 	frame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
 	frame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAsNeeded);
 	frame->evaluateJavaScript(mJQuery);
+#endif
 
-	QString code = "$('#table td:nth-child(2)').hide(); $('#table th:nth-child(2)').hide();";
-	frame->evaluateJavaScript(code);
+	//QString code = "$('#table td:nth-child(2)').hide(); $('#table th:nth-child(2)').hide();";
+	//frame->evaluateJavaScript(code);
 }
 
 #if 0

@@ -40,9 +40,9 @@ protected:
 	QString mJQuery;
 	QPoint mPosition;
 
-//#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
+#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
 	QWebView *mWebView;
-//#else
-//	QWebEngineView* view;
-//#endif
+#else
+	QWebEngineView* mWebView;
+#endif
 };
