@@ -3,10 +3,13 @@
 <script type="text/javascript" src="qrc:///qtwebchannel/qwebchannel.js"></script>
 <script type="text/javascript">
 	<!-- it's a good idea to initialize webchannel after DOM ready, if your code is going to manipulate the DOM -->
-	document.addEventListener("DOMContentLoaded", function () {
-		new QWebChannel(qt.webChannelTransport, function (channel) {
-			var jshelper = channel.objects.jshelper;
-			// do what you gotta do
+	document.addEventListener("DOMContentLoaded", function ()
+	{
+		new QWebChannel(qt.webChannelTransport, function (channel)
+		{
+			var bla = channel.objects.content;
+			alert(bla);
+			console.log(bla);
 		});
 	});
 </script>

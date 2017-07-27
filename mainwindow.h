@@ -11,6 +11,27 @@ class QPoint;
 
 struct Instrument;
 
+class HtmlDocument : public QObject
+{
+	Q_OBJECT
+	Q_PROPERTY(QString html MEMBER mHtml NOTIFY htmlChanged)
+
+public:
+	explicit HtmlDocument(QObject *parent = nullptr) : QObject(parent) {}
+
+	void setHtml(const QString& html)
+	{
+		mHtml = html;
+		emit htmlChanged(mHtml);
+	}
+
+signals:
+	void htmlChanged(const QString& html);
+
+private:
+	QString mHtml;
+};
+
 class MainWindow :
 	public QMainWindow,
 	public IView
@@ -39,6 +60,8 @@ protected:
 
 	QString mJQuery;
 	QPoint mPosition;
+
+	HtmlDocument mHtmlContent;
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
 	QWebView *mWebView;

@@ -32,11 +32,12 @@ MainWindow::MainWindow()
 	mWebView = new QWebEngineView(this);
 #endif
 
-	QWebEnginePage* page = mWebView->page();
-	QWebChannel *channel = new QWebChannel(page);
-	page->setWebChannel(channel);
+	mHtmlContent.setHtml("foobar!");
 
-	//channel->registerObject(QStringLiteral("jshelper"), helper);
+	QWebEnginePage* page = mWebView->page();
+	QWebChannel *channel = new QWebChannel(this);
+	channel->registerObject(QStringLiteral("content"), &mHtmlContent);
+	page->setWebChannel(channel);
 
 	mWebView->setUrl(QUrl("qrc:/index.html"));
 	connect(mWebView, SIGNAL(loadFinished(bool)), SLOT(finishLoading(bool)));
@@ -60,8 +61,11 @@ void MainWindow::SetHtml(const QString& html)
 	//QWebEnginePage *page = new QWebEnginePage;
 	//page->toHtml([=](const QString &result){ mWebView->setPage(page); });
 
-	mWebView->page()->setHtml(html, QUrl("qrc:/"));
-	mWebView->page();
+	//mWebView->page()->setHtml(html, QUrl("qrc:/"));
+	//mWebView->page();
+
+
+
 	//QWebElement table = mWebView->page()->mainFrame()->findFirstElement("table");
 	//table.setInnerXml(html);
 }
