@@ -27,6 +27,7 @@ body
 	border-spacing: 0;
 	empty-cells: show;
 	border: 0px solid #cbcbcb;
+	table-layout: fixed;
 }
 
 .pure-table caption {
