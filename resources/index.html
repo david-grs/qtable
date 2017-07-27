@@ -1,5 +1,16 @@
 <html>
 <link rel="stylesheet" href="tables.css">
+<script type="text/javascript" src="qrc:///qtwebchannel/qwebchannel.js"></script>
+<script type="text/javascript">
+	<!-- it's a good idea to initialize webchannel after DOM ready, if your code is going to manipulate the DOM -->
+	document.addEventListener("DOMContentLoaded", function () {
+		new QWebChannel(qt.webChannelTransport, function (channel) {
+			var jshelper = channel.objects.jshelper;
+			// do what you gotta do
+		});
+	});
+</script>
+<body>
 <table class="pure-table" id="table" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; width: 100%">
 	<thead>
 		<tr>
@@ -68,4 +79,5 @@
 		</tr>
 	</tbody>
 </table>
+</body>
 </html>

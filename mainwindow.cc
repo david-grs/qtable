@@ -9,6 +9,7 @@
 #else
 #include <QWebEngineView>
 #include <QWebEngineSettings>
+#include <QWebChannel>
 #endif
 
 MainWindow::MainWindow()
@@ -30,6 +31,12 @@ MainWindow::MainWindow()
 
 	mWebView = new QWebEngineView(this);
 #endif
+
+	QWebEnginePage* page = mWebView->page();
+	QWebChannel *channel = new QWebChannel(page);
+	page->setWebChannel(channel);
+
+	//channel->registerObject(QStringLiteral("jshelper"), helper);
 
 	mWebView->setUrl(QUrl("qrc:/index.html"));
 	connect(mWebView, SIGNAL(loadFinished(bool)), SLOT(finishLoading(bool)));
@@ -100,6 +107,7 @@ void MainWindow::finishLoading(bool ok)
 		return;//throw std::runtime_error("cannot load page from resource"); // TODO
 	}
 	qDebug() << "page successfully loaded";
+
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
 	QWebFrame* frame = mWebView->page()->mainFrame();
