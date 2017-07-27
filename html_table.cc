@@ -22,7 +22,13 @@ static const QString TableFooter = "</table></html>";
 QString GetTableRow(int row, const Instrument& instr)
 {
 	return QString("<tr") + (row % 2 ? "" : " class=\"pure-table-odd\"") + ">"
-		+ "<td>" + (instr.GetBid() ? QString::number(instr.GetBid()->price) : QString("")) + "</td>";
+			+ "<td>" + (instr.GetBid() ? QString::number(instr.GetBid()->price) : QString("")) + "</td>"
+			+ "<td>" + QString::number(instr.GetTheo()) + "</td>"
+			+ "<td>" + (instr.GetAsk() ? QString::number(instr.GetAsk()->price) : QString("")) + "</td>"
+			+ "<td>" + QString::fromStdString(instr.GetMarket()) + ":" + QString::fromStdString(instr.GetFeedcode()) + "</td>"
+			+ "<td>" + (instr.GetBid() ? QString::number(instr.GetBid()->price) : QString("")) + "</td>"
+			+ "<td>" + QString::number(instr.GetTheo()) + "</td>"
+			+ "<td>" + (instr.GetAsk() ? QString::number(instr.GetAsk()->price) : QString("")) + "</td>";
 }
 
 QString HtmlRenderer::ToHtml(const std::vector<Instrument>& instruments) const

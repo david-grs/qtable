@@ -16,6 +16,8 @@ struct Instrument
 
 	const PriceDepth& GetPriceDepth() const { return mPriceDepth; }
 
+	double GetTheo() const { return mTheo; }
+
 	boost::optional<const DepthEntry&> GetBid() const { return mPriceDepth.bids.size() ? boost::make_optional<const DepthEntry&>(mPriceDepth.bids[0]) : boost::none; }
 	boost::optional<const DepthEntry&> GetAsk() const { return mPriceDepth.asks.size() ? boost::make_optional<const DepthEntry&>(mPriceDepth.asks[0]) : boost::none; }
 
