@@ -24,10 +24,10 @@ MainWindow::MainWindow()
 	QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 	mWebView = new QWebView(this);
 #else
-	//QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::DeveloperExtrasEnabled, true);
-	// enable it via an environment variable QTWEBENGINE_REMOTE_DEBUGGING=<port>. You can put 0.0.0.0:<port> if you are doing debugging of an embedded device
-	// and cant use the local console. Then you can point can connect to http://127.0.0.1: to get the debugger. It will need to be a chromium based browser.
-	// do you have to use Chrome, or you can actually use the "quick nano browser" example if you want.
+
+//#ifdef QT_DEBUG
+	qputenv("QTWEBENGINE_REMOTE_DEBUGGING", "12345");
+//#endif
 
 	mWebView = new QWebEngineView(this);
 #endif
