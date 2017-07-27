@@ -45,13 +45,20 @@ MainWindow::MainWindow()
 	setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 	setCentralWidget(mWebView);
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
 	//mWebView->setContextMenuPolicy(Qt::CustomContextMenu); // disable default context menu (on right click) with Reload
+#else
+	mWebView->setContextMenuPolicy(Qt::NoContextMenu);
+#endif
+
 	mWebView->installEventFilter(this); // forward mouse events from the widget to this object
 }
 
 void MainWindow::SetHtml(const QString& html)
 {
-	//mWebView->page()->mainFrame()->setHtml(html,  QUrl("qrc:/"));
+	//full async way
+	//QWebEnginePage *page = new QWebEnginePage;
+	//page->toHtml([=](const QString &result){ mWebView->setPage(page); });
 
 	mWebView->page()->setHtml(html, QUrl("qrc:/"));
 	mWebView->page();
