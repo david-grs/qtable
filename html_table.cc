@@ -2,9 +2,6 @@
 #include "filter.h"
 
 static const QString TableHeader = R"HTML(
-<html>
-<link rel="stylesheet" href="tables.css">
-<table class="pure-table" id="table" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; width: 100%">
 	<thead>
 		<tr>
 			<th>bid c</th>
@@ -16,8 +13,6 @@ static const QString TableHeader = R"HTML(
 			<th>ask a</th>
 		</tr>
 	</thead>)HTML";
-
-static const QString TableFooter = "</table></html>";
 
 QString GetTableRow(int row, const Instrument& instr)
 {
@@ -45,6 +40,5 @@ QString HtmlRenderer::ToHtml(const std::vector<Instrument>& instruments) const
 		++row;
 	}
 
-	html += TableFooter;
 	return html;
 }
