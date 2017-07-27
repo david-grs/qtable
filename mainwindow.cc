@@ -26,7 +26,7 @@ MainWindow::MainWindow()
 #else
 
 //#ifdef QT_DEBUG
-	qputenv("QTWEBENGINE_REMOTE_DEBUGGING", "12345");
+	qputenv("QTWEBENGINE_REMOTE_DEBUGGING", "0.0.0.0:12345");
 //#endif
 
 	mWebView = new QWebEngineView(this);
