@@ -99,13 +99,24 @@ std::vector<InstrumentDefinition> load(const std::string& filename)
 	return instruments;
 }
 
-void send_instrument_definitions(udp_client& client, const std::vector<InstrumentDefinition>& instruments)
+std::vector<std::string> serialize_instruments(const std::vector<InstrumentDefinition>& instruments)
 {
+	std::vector<std::string> messages;
+	messages.reserve(instruments.size());
+
 	for (const InstrumentDefinition& instr : instruments)
 	{
-		std::string str = proto::serialize(instr);
-		client.send(str);
+		std::string msg = proto::serialize(instr);
+		messages.push_back(std::move(msg));//client.send(str);
 	}
+
+	return messages;
+}
+
+void send_instrument_definitions(udp_client& client, const std::vector<std::string>& messages)
+{
+	for (const std::string& msg : messages)
+		client.send(msg);
 }
 
 int main()
@@ -114,14 +125,15 @@ int main()
 	udp_client client(io_service, "localhost", 1234);
 
 	std::vector<InstrumentDefinition> instruments = load("secdef.dat");
-	send_instrument_definitions(client, instruments);
+
+	std::vector<std::string> messages = serialize_instruments(instruments);
 
 	//std::cout << "ctor=" << Tracker<Instrument>::ctor << " copies=" << Tracker<Instrument>::copies << " moves=" << Tracker<Instrument>::moves << std::endl;
 
 	while (1)
 	{
 		std::cout << "send" << std::endl;
-		send_instrument_definitions(client, instruments);
+		send_instrument_definitions(client, messages);
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 
