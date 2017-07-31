@@ -2,14 +2,18 @@
 <link rel="stylesheet" href="tables.css">
 <script type="text/javascript" src="qrc:///qtwebchannel/qwebchannel.js"></script>
 <script type="text/javascript">
-	<!-- it's a good idea to initialize webchannel after DOM ready, if your code is going to manipulate the DOM -->
 	document.addEventListener("DOMContentLoaded", function ()
 	{
 		new QWebChannel(qt.webChannelTransport, function (channel)
 		{
-			var bla = channel.objects.content;
-			alert(bla);
-			console.log(bla);
+			channel.objects.content.htmlChanged.connect(function()
+			{
+				// This callback will be invoked whenever the signal is emitted on the C++/QML side.
+				console.log(arguments);
+
+				var table = document.getElementById("table") ;
+				table.innerHTML = arguments[0];
+			});
 		});
 	});
 </script>
