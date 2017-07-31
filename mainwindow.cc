@@ -64,7 +64,7 @@ void MainWindow::SetHtml(const QString& html)
 	//mWebView->page()->setHtml(html, QUrl("qrc:/"));
 	//mWebView->page();
 
-
+	mHtmlContent.setHtml(html);
 
 	//QWebElement table = mWebView->page()->mainFrame()->findFirstElement("table");
 	//table.setInnerXml(html);
@@ -117,8 +117,8 @@ void MainWindow::finishLoading(bool ok)
 		qDebug() << "page failed to load";
 		return;//throw std::runtime_error("cannot load page from resource"); // TODO
 	}
-	qDebug() << "page successfully loaded";
 
+	qDebug() << "page successfully loaded";
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
 	QWebFrame* frame = mWebView->page()->mainFrame();
@@ -126,10 +126,9 @@ void MainWindow::finishLoading(bool ok)
 	frame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
 	frame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAsNeeded);
 	frame->evaluateJavaScript(mJQuery);
+#else
+	//mWebView->page()->runJavaScript("document.body.style.overflow='hidden';");
 #endif
-
-	//QString code = "$('#table td:nth-child(2)').hide(); $('#table th:nth-child(2)').hide();";
-	//frame->evaluateJavaScript(code);
 }
 
 #if 0
