@@ -27,5 +27,8 @@ target_link_libraries(qtable pthread) #Boost_USE_MULTITHREADED does not work on 
 qt5_use_modules(qtable Widgets WebEngineWidgets WebChannel)
 # specific kit: -DCMAKE_PREFIX_PATH=~/Qt5.6.2/5.6/gcc_64/lib/cmake/
 
-add_executable(instruments_feeder instruments_feeder.cc udp_client.h proto.h types.h)
-target_link_libraries(instruments_feeder ${Boost_LIBRARIES} pthread)
+add_executable(instrument_feeder instrument_feeder.cc udp_client.h proto.h types.h)
+target_link_libraries(instrument_feeder ${Boost_LIBRARIES} pthread)
+
+add_executable(price_feeder price_feeder.cc udp_client.h proto.h types.h)
+target_link_libraries(price_feeder ${Boost_LIBRARIES} pthread)
