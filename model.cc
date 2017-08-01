@@ -10,7 +10,7 @@ Model::Model(IView& view) :
 {
 	mRenderingTimer = new QTimer(this);
 	connect(mRenderingTimer, SIGNAL(timeout()), this, SLOT(UpdateView()));
-	mRenderingTimer->start(10000);
+	mRenderingTimer->start(5000);
 
 	UpdateView();
 }
@@ -31,7 +31,7 @@ void Model::UpdateView()
 
 	timer.start();
 	QString html = mRenderer.ToHtml(mInstruments);
-	qDebug() << timer.nsecsElapsed() / 1000.0;
+	qDebug() << timer.nsecsElapsed() / 1000.0 << "ms - " << mInstruments.size() << " instruments";
 
 	timer.restart();
 	mView.SetHtml(html);
